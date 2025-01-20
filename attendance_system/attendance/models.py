@@ -5,7 +5,7 @@ from datetime import date
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) 
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
-    face_encoding = models.BinaryField(blank=True, null=True)  # Store face encoding as binary data
+    face_encoding = models.BinaryField(blank=True, null=True) 
 
     def __str__(self):
         return f"{self.roll_number} - {self.user.first_name} {self.user.last_name}"

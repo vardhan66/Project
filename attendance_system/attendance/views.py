@@ -15,7 +15,7 @@ from datetime import date
 
 
 def home(request):
-    return render(request, 'base.html')  # Replace with the appropriate template
+    return render(request, 'base.html') 
 from django.core.exceptions import ValidationError
 
 def register(request):
@@ -23,36 +23,36 @@ def register(request):
         form = Registerform(request.POST)
         if form.is_valid():
             user = form.save()
-            student = Student(user=user)
-            student.save()  # This will ensure the student is created properly
+            student = Student(User=user)
+            student.save() 
             login(request, user)
-            return redirect('profile')  # Redirect to profile page after registration
-    else:
+            return redirect('profile')
         form = Registerform()
 
     return render(request, 'registration/register.html', {"form": form})
 
 
 
-# Profile view (User profile page)
+
 @login_required
 def profile(request):
     return render(request, 'accounts/profile.html')
 
-# Dashboard view (Shows user information)
 @login_required
 def dashboard(request):
     try:
-        # Try to get the Student object associated with the logged-in user
         student = Student.objects.get(user=request.user)
     except Student.DoesNotExist:
-        # If no Student record exists for this user, you could handle this by redirecting
-        return redirect('profile')  # Redirect to the profile page, or any other page
+        return redirect('profile') 
 
     return render(request, 'attendance/dashboard.html', {'student': student})
 
+from django.contrib.auth import logout
 
-# Mark attendance view (Handles face registration and attendance marking)
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
 @login_required
 def mark_attendance(request):
     student = Student.objects.get(user=request.user)
