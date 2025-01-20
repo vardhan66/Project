@@ -5,7 +5,7 @@
 {% block content %}
 <h1>Dashboard</h1>
 
-<p><strong>Welcome, {{ student.user.first_name }}!</strong></p>
+<p><strong>Welcome, {{ student.user.username }}!</strong></p>
 
 {% if student.roll_number %}
     <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
@@ -13,13 +13,7 @@
     <p><strong>Roll Number:</strong> Not assigned</p>
 {% endif %}
 
-<p><strong>Attendance for the day:</strong> 
-    {% if student.attendance_set.filter(date=date.today).exists %}
-        Marked
-    {% else %}
-        Not Marked
-    {% endif %}
-</p>
+
 
 {% if student.face_encoding %}
     <p><strong>Face Registered:</strong> Yes</p>

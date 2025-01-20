@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate , login as auth_login
 from django.http import JsonResponse
 from .forms import Registerform
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from .models import Student, Attendance
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
@@ -45,7 +46,7 @@ def register(request):
         # Log in the user after successful signup
         auth_login(request, user)
         # Redirect to the profile or dashboard page
-        return redirect('user_login')  
+        return render(request,'signin.html')  
 
     return render(request, 'registration/signup.html')
 
@@ -84,7 +85,7 @@ def dashboard(request):
     except Student.DoesNotExist:
         return redirect('profile') 
 
-    return render(request, 'attendance/dashboard.html', {'student': student})
+    return render(request, 'dashboard.html', {'student': student})
 
 from django.contrib.auth import logout
 
