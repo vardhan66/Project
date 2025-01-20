@@ -1,7 +1,9 @@
 from django.urls import path
 from . import views
+import django.contrib.auth.views
 
 urlpatterns = [
+    path('home/', views.home, name='home'),
     path('signup/', views.register, name='signup'),  # Signup page
     path('accounts/profile/', views.profile, name='profile'),  # User profile (Django auth system)
     path('dashboard/', views.dashboard, name='dashboard'),  # User dashboard

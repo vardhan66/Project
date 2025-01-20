@@ -1,14 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Mark Attendance{% endblock %}
+
+{% block content %}
+<h1>Mark Attendance</h1>
+
+<div class="camera-container" style="position:relative; width: 100%; height: 50vh;">
+    <video id="videoFeed" width="100%" height="100%" autoplay></video>
+</div>
+
 {% if face_registered %}
-    <p>Your face is already registered!</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Mark Attendance</button>
-    </form>
+    <div class="attendance-container" style="text-align:center;">
+        <h2>Your face is registered!</h2>
+        <button id="markAttendanceButton" onclick="markAttendance()">Mark Attendance</button>
+    </div>
 {% else %}
-    <p>Please upload an image of your face to register.</p>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="face_image" required>
-        <button type="submit">Register Face</button>
-    </form>
+    <div class="registration-container" style="text-align:center;">
+        <h2>Your face is not registered yet!</h2>
+        <button id="registerFaceButton" onclick="registerFace()">Register Face</button>
+    </div>
 {% endif %}
+
+<script>
+  const video = document.getElementById('videoFeed');
+  const markAttendanceButton = document.getElementById('markAttendanceButton');
+  const registerFaceButton = document.getElementById('registerFaceButton');
+
+  // Access the webcam
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then((stream) => {
+      video.srcObject = stream;
+    })
+    .catch((err) => {
+      console.log('Error accessing webcam: ', err);
+    });
+
+  // Capture a frame from the video feed for registering the face
+  function registerFace() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = canvas.toDataURL('image/png');
+
+    // Send captured image to the server for face registration
+    fetch('/mark-attendance/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+      },
+      body: JSON.stringify({ image: imageData, action: 'register' })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      alert(data.status); // Display server response (success or error)
+      if (data.status === "Face registered successfully") {
+        // After registration, change button state
+        markAttendanceButton.style.display = 'block';
+        registerFaceButton.style.display = 'none';
+      }
+    })
+    .catch((error) => {
+      console.error('Error registering face: ', error);
+    });
+  }
+
+  // Capture a frame from the video feed for marking attendance
+  function markAttendance() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const imageData = canvas.toDataURL('image/png');
+
+    // Send captured image to the server for attendance marking
+    fetch('/mark-attendance/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+      },
+      body: JSON.stringify({ image: imageData, action: 'mark' })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      alert(data.status); // Display server response (success or error)
+    })
+    .catch((error) => {
+      console.error('Error marking attendance: ', error);
+    });
+  }
+</script>
+
+{% endblock %}

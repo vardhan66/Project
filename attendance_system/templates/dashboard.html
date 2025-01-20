@@ -1,13 +1,10 @@
-{% csrf_token %}
 {% extends 'base.html' %}
 
-{% block content %}
-<div class="min-vh-100 bg-light">
-    {% include 'partials/navbar.html' %}
+{% block title %}Dashboard{% endblock %}
 
-    <div class="container py-4">
-        {% include 'partials/stats.html' %}
-        {% include 'partials/recent.html' %}
-    </div>
-</div>
+{% block content %}
+<h1>Dashboard</h1>
+<p>Welcome, {{ student.first_name }}!</p>
+<p>Roll Number: {{ student.roll_number }}</p>
+<p>Attendance for the day: {% if student.attendance_set.filter(date=date.today).exists %}Marked{% else %}Not Marked{% endif %}</p>
 {% endblock %}

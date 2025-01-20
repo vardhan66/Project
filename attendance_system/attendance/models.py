@@ -3,8 +3,7 @@ from django.contrib.auth.models import User
 from datetime import date
 
 class Student(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to Django's built-in User model
-    roll_number = models.CharField(max_length=20, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE) 
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     face_encoding = models.BinaryField(blank=True, null=True)  # Store face encoding as binary data
 
