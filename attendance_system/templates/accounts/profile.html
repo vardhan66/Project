@@ -1,12 +1,29 @@
-{% extends 'base.html' %}
+{% extends 'dashboard_base.html' %}
 
 {% block title %}Profile{% endblock %}
 
 {% block content %}
 <h1>User Profile</h1>
-<p>Username: {{ user.username }}</p>
-<p>Full Name: {{ user.first_name }} {{ user.last_name }}</p>
-<p>Email: {{ user.email }}</p>
 
-<img src="{{ user.student.profile_picture.url }}" alt="Profile Picture" width="150" height="150">
+<p><strong>Username:</strong> {{ user.username }}</p>
+<p><strong>Full Name:</strong> {{ user.first_name }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+
+{% if user.student.roll_number %}
+    <p><strong>Roll Number:</strong> {{ user.student.roll_number }}</p>
+{% endif %}
+
+{% if user.student.face_encoding %}
+    <p><strong>Face Registered:</strong> Yes</p>
+{% else %}
+    <p><strong>Face Registered:</strong> No</p>
+{% endif %}
+
+{% if user.student.profile_picture %}
+    <img src="{{ user.student.profile_picture.url }}" alt="Profile Picture" width="150" height="150">
+{% else %}
+    <p>No profile picture available.</p>
+{% endif %}
+
+<a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
 {% endblock %}

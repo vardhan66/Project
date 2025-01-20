@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import authenticate , login as auth_login
 from django.http import JsonResponse
 from .forms import Registerform
+from django.contrib.auth.models import User
 from .models import Student, Attendance
+from django.contrib.auth.forms import AuthenticationForm
+from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 import face_recognition
 import numpy as np
@@ -15,23 +18,59 @@ from datetime import date
 
 
 def home(request):
-    return render(request, 'base.html') 
-from django.core.exceptions import ValidationError
+    return render(request, 'liveness_home.html') 
+
+ # Assuming Student model is in the same app
 
 def register(request):
     if request.method == 'POST':
-        form = Registerform(request.POST)
-        if form.is_valid():
-            user = form.save()
-            student = Student(User=user)
-            student.save() 
-            login(request, user)
-            return redirect('profile')
-        form = Registerform()
+        username = request.POST.get('username')  # Use username for login
+        email = request.POST.get('email')  # Keep email as a normal field
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm-password')
+        # Check if passwords match
+        if password != confirm_password:
+            return render(request, 'registration/signup.html', {
+                'error': 'Passwords do not match!'
+            })
+        # Check if all fields are provided
+        if not username or not email or not password:
+            return render(request, 'registration/signup.html', {
+                'error': 'All fields are required!'
+            })
+        # Create the user object (username for login, email as normal)
+        user = User.objects.create_user(username=username, password=password, email=email)
+        student = Student(user=user)
+        student.save() 
+        # Log in the user after successful signup
+        auth_login(request, user)
+        # Redirect to the profile or dashboard page
+        return redirect('user_login')  
 
-    return render(request, 'registration/register.html', {"form": form})
+    return render(request, 'registration/signup.html')
 
 
+from django.contrib.auth import authenticate, login as auth_login
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')  # Use 'username' for login
+        password = request.POST.get('password')
+
+        # Authenticate the user by username instead of email
+        try:
+            user = authenticate(request, username=username, password=password)  # Authenticate using username
+            if user is not None:
+                auth_login(request, user)
+                return redirect('profile')  # Redirect to profile page after successful login
+            else:
+                return render(request, 'signin.html', {"error": "Invalid username or password"})
+        except Exception as e:
+            return render(request, 'signin.html', {"error": str(e)})
+
+    return render(request, 'signin.html')
 
 
 @login_required
@@ -52,6 +91,7 @@ from django.contrib.auth import logout
 def logout_view(request):
     logout(request)
     return redirect('login')
+
 
 @login_required
 def mark_attendance(request):
@@ -94,11 +134,11 @@ def mark_attendance(request):
                 # Compare the captured face with the registered face
                 matches = face_recognition.compare_faces([stored_encoding], face_encoding)
                 if matches[0]:
-                    # Mark attendance for the current day
+                    # Get or create the attendance for the current day
                     attendance, created = Attendance.objects.get_or_create(student=student, date=date.today())
                     if created:
-                        attendance.status = 'present'
-                        attendance.save()
+                        # Mark attendance as 'present' when it's newly created
+                        attendance.mark_present()
                         return JsonResponse({'status': 'Attendance marked successfully'})
                     else:
                         return JsonResponse({'status': 'Attendance already marked for today'})

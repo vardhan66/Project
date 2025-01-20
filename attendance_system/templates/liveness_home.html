@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Liveness Attendance System</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+<body>
+  <div class="overlay">
+    <div class="content">
+      <h1>Face Liveness Attendance System</h1>
+      <p>Secure and reliable attendance tracking with advanced facial recognition technology.</p>
+      <div class="button-container">
+        <button class="btn btn-signin" onclick="redirectToSignIn()">Sign In</button>
+        <button class="btn btn-signup" onclick="redirectToSignUp()">Sign Up</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function redirectToSignIn() {
+      window.location.href = "{% url 'login' %}";
+    }
+    function redirectToSignUp() {
+      window.location.href = "{% url 'signup' %}";
+    }
+  </script>
+</body>
+</html>
+

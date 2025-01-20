@@ -3,12 +3,12 @@ from . import views
 import django.contrib.auth.views
 
 urlpatterns = [
-    path('home/', views.home, name='home'),
-    path('signup/', views.register, name='signup'),  # Signup page
-    path('accounts/profile/', views.profile, name='profile'),  # User profile (Django auth system)
-    path('dashboard/', views.dashboard, name='dashboard'),  # User dashboard
-    # Mark attendance route (this should register the face and mark attendance)
+    path('', views.home, name='home'),
+    path('signup/', views.register, name='signup'), 
+    path('login/', views.user_login, name='login'),
+    path('accounts/profile/', views.profile, name='profile'), 
+    path('dashboard/', views.dashboard, name='dashboard'), 
     path('mark-attendance/', views.mark_attendance, name='mark-attendance'), 
-    path('logout/', views.logout_view, name='logout'), # Mark attendance
+    path('logout/', views.logout_view, name='logout'), 
     
 ]

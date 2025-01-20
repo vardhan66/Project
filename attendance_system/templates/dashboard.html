@@ -1,10 +1,33 @@
-{% extends 'base.html' %}
+{% extends 'dashboard_base.html' %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
 <h1>Dashboard</h1>
-<p>Welcome, {{ student.first_name }}!</p>
-<p>Roll Number: {{ student.roll_number }}</p>
-<p>Attendance for the day: {% if student.attendance_set.filter(date=date.today).exists %}Marked{% else %}Not Marked{% endif %}</p>
+
+<p><strong>Welcome, {{ student.user.first_name }}!</strong></p>
+
+{% if student.roll_number %}
+    <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+{% else %}
+    <p><strong>Roll Number:</strong> Not assigned</p>
+{% endif %}
+
+<p><strong>Attendance for the day:</strong> 
+    {% if student.attendance_set.filter(date=date.today).exists %}
+        Marked
+    {% else %}
+        Not Marked
+    {% endif %}
+</p>
+
+{% if student.face_encoding %}
+    <p><strong>Face Registered:</strong> Yes</p>
+{% else %}
+    <p><strong>Face Registered:</strong> No</p>
+{% endif %}
+
+<a href="{% url 'profile' %}" class="btn">Go to Profile</a>
+<a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+
 {% endblock %}
