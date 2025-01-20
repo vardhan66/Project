@@ -1,0 +1,14 @@
+{% if face_registered %}
+    <p>Your face is already registered!</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Mark Attendance</button>
+    </form>
+{% else %}
+    <p>Please upload an image of your face to register.</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="face_image" required>
+        <button type="submit">Register Face</button>
+    </form>
+{% endif %}

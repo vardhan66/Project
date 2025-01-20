@@ -1,0 +1,13 @@
+{% csrf_token %}
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-vh-100 bg-light">
+    {% include 'partials/navbar.html' %}
+
+    <div class="container py-4">
+        {% include 'partials/stats.html' %}
+        {% include 'partials/recent.html' %}
+    </div>
+</div>
+{% endblock %}
