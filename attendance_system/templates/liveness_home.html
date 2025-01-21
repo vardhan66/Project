@@ -7,12 +7,12 @@
   {% load static %}
   <link rel="stylesheet" href="{% static '/static/styles.css' %}">
 </head>
-<body background='/static/images/bg.jpeg'>
+<body background='/static/images/bg2.jpeg' style="background-repeat: no-repeat; background-size: cover;">
   <div class="overlay">
-    <div class="content">
-      <h1>Face Liveness Attendance System</h1>
-      <p>Secure and reliable attendance tracking with advanced facial recognition technology.</p>
-      <div class="button-container">
+    <div class="content" >
+      <h1 style="text-align: center;color: antiquewhite;">Face Liveness Attendance System</h1>
+      
+      <div class="button-container" style="display: flex;flex-direction: column;justify-content: center; ">
         <button class="btn btn-signin" onclick="redirectToSignIn()">Sign In</button>
         <button class="btn btn-signup" onclick="redirectToSignUp()">Sign Up</button>
       </div>
