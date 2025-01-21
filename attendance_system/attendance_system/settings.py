@@ -117,11 +117,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICILES_DIRS=(os.path.join(BASE_DIR/'static'))
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Add or update the STATIC_ROOT setting
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATIFILES_DIRS=(os.path.join(BASE_DIR,'static'))
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#LOGIN_REDIRECT_URL ="/home/"

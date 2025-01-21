@@ -5,25 +5,113 @@
 {% block content %}
 <h1>User Profile</h1>
 
-<p><strong>Username:</strong> {{ user.username }}</p>
+<div class="profile-card">
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
 
-<p><strong>Email:</strong> {{ user.email }}</p>
+    {% if user.student.roll_number %}
+        <p><strong>Roll Number:</strong> {{ user.student.roll_number }}</p>
+    {% endif %}
 
-{% if user.student.roll_number %}
-    <p><strong>Roll Number:</strong> {{ user.student.roll_number }}</p>
-{% endif %}
+    {% if user.student.face_encoding %}
+        <p><strong>Face Registered:</strong> Yes</p>
+    {% else %}
+        <p><strong>Face Registered:</strong> No</p>
+    {% endif %}
 
-{% if user.student.face_encoding %}
-    <p><strong>Face Registered:</strong> Yes</p>
-{% else %}
-    <p><strong>Face Registered:</strong> No</p>
-{% endif %}
+    {% if user.student.profile_picture %}
+        <img src="{{ user.student.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+    {% else %}
+        <p>No profile picture available.</p>
+    {% endif %}
 
-{% if user.student.profile_picture %}
-    <img src="{{ user.student.profile_picture.url }}" alt="Profile Picture" width="150" height="150">
-{% else %}
-    <p>No profile picture available.</p>
-{% endif %}
+    <a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
+</div>
 
-<a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
+<style>
+    /* General Page Styling */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        color: #4CAF50;
+        margin-bottom: 20px;
+    }
+
+    .profile-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .profile-card p {
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    .profile-picture {
+        border-radius: 50%;
+        margin: 20px 0;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #4CAF50;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #45a049;
+    }
+
+    @media (max-width: 768px) {
+        .profile-card {
+            padding: 15px;
+        }
+
+        .profile-card p {
+            font-size: 16px;
+        }
+
+        .btn {
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 24px;
+        }
+
+        .profile-card p {
+            font-size: 14px;
+        }
+
+        .btn {
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+    }
+</style>
 {% endblock %}
